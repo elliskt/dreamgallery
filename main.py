@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # author: Ellis Lam
-
+import base64
 import flask
 from flask import request
 from flask_cors import *
@@ -10,6 +10,7 @@ from matplotlib import cm
 from PIL import Image
 import numpy
 from io import StringIO
+import sys
 # --- local
 import stylize
 
@@ -38,7 +39,12 @@ def stylization():
     im = imutils.resize(im, 2048)
     # --- load model path ---
     model_path = 'models/test.pth'
-    new_img = style.stylize(CONTENT_IMAGE=im, MODEL_PATH=model_path)
+    generated_img = style.stylize(CONTENT_IMAGE=im, MODEL_PATH=model_path)
+    rgb = generated_img[..., ::-1].copy()
+    pil_img = Image.fromarray(rgb.astype('uint8'))
+    contents = pil_img.getvalue()
+    print(contents[:100])
+    return flask.Response(contents, mimetype='image/jpeg')
 
 
 @server.route("/")
@@ -47,16 +53,19 @@ def hello():
 
 
 if __name__ == '__main__':
-    model_path = 'models/test.pth'
-    im = utils.load_image('1.png')
-    new_img = style.stylize(CONTENT_IMAGE=im, MODEL_PATH=model_path)
-    utils.show(new_img)
-    new_im = Image.fromarray(numpy.uint8(new_img)).convert('RGB')
-    new_im.show()
-    a = StringIO()
-    new_im.save(a, 'png')
-    a.seek(0)
-    print(a)
-    print(type(new_img))
-    print(new_img)
-    # server.run(host='0.0.0.0', port=8800, debug=True, threaded=True)
+    # model_path = 'models/test.pth'
+    # im = utils.load_image('2.jpg')
+    # new_img = style.stylize(CONTENT_IMAGE=im, MODEL_PATH=model_path)
+    # utils.saveimg(new_img, 'test.jpg')
+    # rgb = new_img[..., ::-1].copy()
+    # img = Image.fromarray(rgb.astype('uint8'))
+    # img.show()
+    # a = StringIO()
+    # import io
+    #
+    # with io.BytesIO() as output:
+    #     img.save(output, format="JPEG")
+    #     contents = output.getvalue()
+    #     print(contents[:100])
+    # else:
+    server.run(host='0.0.0.0', port=8800, debug=True, threaded=True)

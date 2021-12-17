@@ -29,6 +29,12 @@ def show(img):
     plt.show()
 
 
+def saveimg(img, image_path):
+    img = img.clip(0, 255)
+    # cv2.imwrite(image_path, img)
+    cv2.imencode('.jpg', img)[1].tofile(image_path)
+
+
 def itot(img, max_size=None):
     # Rescale the image
     if (max_size == None):

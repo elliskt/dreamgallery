@@ -1,6 +1,8 @@
 from torchvision import transforms
 import cv2
 import imutils
+import numpy as np
+import matplotlib.pyplot as plt
 
 def load_image(path, imsize = None):
     # Images loaded as BGR
@@ -14,6 +16,17 @@ def load_image(path, imsize = None):
     else:
         img = imutils.resize(img, width=imsize)
         return img
+
+
+# Show image
+def show(img):
+    # Convert from BGR to RGB
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # imshow() only accepts float [0,1] or int [0,255]
+    img = np.array(img / 255).clip(0, 1)
+    plt.figure(figsize=(10, 5))
+    plt.imshow(img)
+    plt.show()
 
 
 def itot(img, max_size=None):

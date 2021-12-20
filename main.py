@@ -2,6 +2,8 @@
 # author: Ellis Lam
 import base64
 import flask
+import numpy as np
+import requests
 from flask import request
 from flask_cors import *
 import imutils
@@ -33,10 +35,11 @@ style = stylize.Stylization()
 @server.route("/stylization", methods=['POST'])
 def stylization():
     # --- load image ---
-    data = request.files['original_image'].read()
-    npimg = numpy.fromstring(data, numpy.uint8)
-    im = cv2.imdecode(npimg, cv2.IMREAD_UNCHANGED)
-    im = imutils.resize(im, 2048)
+    url = request.form['image_url']
+    r = requests.get(url, stream=True, verify=True)
+    arr = np.array(bytearray(r.content), dtype=np.uint8)
+    im = cv2.imdecode(arr, -1)
+    im = imutils.resize(im, 1980)
     # --- load model path ---
     model_path = 'models/test.pth'
     generated_img = style.stylize(CONTENT_IMAGE=im, MODEL_PATH=model_path)
@@ -69,3 +72,15 @@ if __name__ == '__main__':
     #     print(contents[:100])
     # else:
     server.run(host='0.0.0.0', port=8800, debug=True, threaded=True)
+
+    # url = 'https://www.tingmuseum.art/api/ting_museum_database/museum_banner/61bc5d7a75f01256c397a802.jpg'
+    # r = requests.get(url, stream=True, verify=True)
+    # arr = np.array(bytearray(r.content), dtype=np.uint8)
+    # im = cv2.imdecode(arr, -1)
+    #
+    # cv2.imshow('', im)
+    # cv2.waitKey()
+    #
+    # model_path = 'models/test.pth'
+    # generated_img = style.stylize(CONTENT_IMAGE=im, MODEL_PATH=model_path)
+    # utils.show(generated_img)

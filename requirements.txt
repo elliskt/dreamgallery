@@ -5,3 +5,8 @@ pip install imutils
 pip install numpy
 pip install matplotlib
 pip install opencv-python
+
+pip install gunicorn
+pip install greenlet
+pip install eventlet
+pip install gevent

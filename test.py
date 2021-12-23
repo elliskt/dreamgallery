@@ -35,6 +35,7 @@ if __name__ == '__main__':
 
     url = 'https://www.tingmuseum.art/api/ting_museum_database/museum_banner/61bc5d7a75f01256c397a802.jpg'
     # # url = 'https://cdc-material.qq.com/202112201608/5b7e836ed6ffff7b1d1b5a5d0dce84e2/ewesion_hdd_2/4060975/91513296/staff_1024.jpg/preview600'
+    # url = ''
     start = time.time()
     r = requests.get(url, verify=False)
     print(r)
